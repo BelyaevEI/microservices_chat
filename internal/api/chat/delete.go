@@ -9,6 +9,7 @@ import (
 
 // DeleteChat Delete deletes a chat
 func (i *Implementation) DeleteChat(ctx context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
+
 	err := i.chatService.DeleteChat(ctx, req.GetId())
 	if err != nil {
 		return nil, err

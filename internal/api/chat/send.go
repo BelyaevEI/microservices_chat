@@ -9,6 +9,7 @@ import (
 
 // SendMessage sends a new message
 func (i *Implementation) SendMessage(ctx context.Context, req *desc.SendMessageRequest) (*desc.SendMessageResponse, error) {
+
 	id, err := i.chatService.SendMessage(ctx, converter.ToMessageCreateFromDesc(req))
 	if err != nil {
 		return nil, err

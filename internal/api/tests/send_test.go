@@ -11,7 +11,7 @@ import (
 	"github.com/BelyaevEI/microservices_chat/internal/service/mocks"
 	desc "github.com/BelyaevEI/microservices_chat/pkg/chat_v1"
 	"github.com/brianvoe/gofakeit"
-	"github.com/gojuno/minimock"
+	"github.com/gojuno/minimock/v3"
 	"github.com/stretchr/testify/require"
 )
 
@@ -92,17 +92,17 @@ func TestSendMessage(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+	for _, test := range tests {
+
+		t.Run(test.name, func(t *testing.T) {
 			t.Parallel()
 
-			sendMessageServiceMock := tt.chatServiceMock(mc)
+			sendMessageServiceMock := test.chatServiceMock(mc)
 			api := chat.NewImplementation(sendMessageServiceMock)
 
-			newID, err := api.SendMessage(tt.args.ctx, tt.args.req)
-			require.Equal(t, tt.err, err)
-			require.Equal(t, tt.want, newID)
+			newID, err := api.SendMessage(test.args.ctx, test.args.req)
+			require.Equal(t, test.err, err)
+			require.Equal(t, test.want, newID)
 		})
 	}
 
