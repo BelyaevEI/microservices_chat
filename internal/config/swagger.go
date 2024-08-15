@@ -12,6 +12,7 @@ const (
 	swaggerPortEnvName = "SWAGGER_PORT"
 )
 
+// SwaggerConfig config for Swagger
 type SwaggerConfig interface {
 	Address() string
 }
@@ -21,6 +22,7 @@ type swaggerConfig struct {
 	port string
 }
 
+// NewSwaggerConfig initializes a Swagger configuration.
 func NewSwaggerConfig() (SwaggerConfig, error) {
 	host := os.Getenv(swaggerHostEnvName)
 	if len(host) == 0 {
