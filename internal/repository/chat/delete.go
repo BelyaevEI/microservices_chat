@@ -3,7 +3,7 @@ package chat
 import (
 	"context"
 
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres"
+	"github.com/BelyaevEI/platform_common/pkg/db"
 	sq "github.com/Masterminds/squirrel"
 )
 
@@ -18,7 +18,7 @@ func (r *repo) DeleteChat(ctx context.Context, id int64) error {
 		return err
 	}
 
-	q := postgres.Query{
+	q := db.Query{
 		Name:     "chat_repository.Delete",
 		QueryRaw: query,
 	}

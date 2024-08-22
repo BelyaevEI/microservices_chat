@@ -1,8 +1,8 @@
 package chat
 
 import (
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres"
 	"github.com/BelyaevEI/microservices_chat/internal/repository"
+	"github.com/BelyaevEI/platform_common/pkg/db"
 )
 
 const (
@@ -18,10 +18,10 @@ const (
 )
 
 type repo struct {
-	db postgres.Client
+	db db.Client
 }
 
 // NewRepository creates a new user repository.
-func NewRepository(db postgres.Client) repository.ChatRepository {
+func NewRepository(db db.Client) repository.ChatRepository {
 	return &repo{db: db}
 }

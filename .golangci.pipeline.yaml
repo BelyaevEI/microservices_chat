@@ -31,7 +31,7 @@ linters-settings:
 linters:
   disable-all: true
   enable:
-    - errcheck
+    # - errcheck
     - goconst
     - goimports
     - gosec

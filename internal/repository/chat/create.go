@@ -3,8 +3,8 @@ package chat
 import (
 	"context"
 
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres"
 	"github.com/BelyaevEI/microservices_chat/internal/model"
+	"github.com/BelyaevEI/platform_common/pkg/db"
 	sq "github.com/Masterminds/squirrel"
 )
 
@@ -22,7 +22,7 @@ func (r *repo) CreateChat(ctx context.Context, createChat *model.ChatCreate) (in
 		return 0, err
 	}
 
-	q := postgres.Query{
+	q := db.Query{
 		Name:     "chat_repository.Create",
 		QueryRaw: query,
 	}

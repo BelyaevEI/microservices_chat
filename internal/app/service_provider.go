@@ -5,23 +5,25 @@ import (
 	"log"
 
 	"github.com/BelyaevEI/microservices_chat/internal/api/chat"
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres"
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres/pg"
-	"github.com/BelyaevEI/microservices_chat/internal/client/postgres/transaction"
-	"github.com/BelyaevEI/microservices_chat/internal/closer"
 	"github.com/BelyaevEI/microservices_chat/internal/config"
 	"github.com/BelyaevEI/microservices_chat/internal/repository"
 	chatRepository "github.com/BelyaevEI/microservices_chat/internal/repository/chat"
 	"github.com/BelyaevEI/microservices_chat/internal/service"
 	chatService "github.com/BelyaevEI/microservices_chat/internal/service/chat"
+	"github.com/BelyaevEI/platform_common/pkg/closer"
+	"github.com/BelyaevEI/platform_common/pkg/db"
+	"github.com/BelyaevEI/platform_common/pkg/db/pg"
+	"github.com/BelyaevEI/platform_common/pkg/db/transaction"
 )
 
 type serviceProvider struct {
-	pgConfig   config.PGConfig
-	grpcConfig config.GRPCConfig
+	pgConfig      config.PGConfig
+	grpcConfig    config.GRPCConfig
+	httpConfig    config.HTTPConfig
+	swaggerConfig config.SwaggerConfig
 
-	pgClient  postgres.Client
-	txManager postgres.TxManager
+	pgClient  db.Client
+	txManager db.TxManager
 
 	chatImpl       *chat.Implementation
 	chatRepository repository.ChatRepository
@@ -59,7 +61,33 @@ func (s *serviceProvider) GRPCConfig() config.GRPCConfig {
 	return s.grpcConfig
 }
 
-func (s *serviceProvider) PostgresClient(ctx context.Context) postgres.Client {
+func (s *serviceProvider) HTTPConfig() config.HTTPConfig {
+	if s.httpConfig == nil {
+		cfg, err := config.NewHTTPConfig()
+		if err != nil {
+			log.Fatalf("failed to get http config: %s", err.Error())
+		}
+
+		s.httpConfig = cfg
+	}
+
+	return s.httpConfig
+}
+
+func (s *serviceProvider) SwaggerConfig() config.SwaggerConfig {
+	if s.swaggerConfig == nil {
+		cfg, err := config.NewSwaggerConfig()
+		if err != nil {
+			log.Fatalf("failed to get swagger config: %s", err.Error())
+		}
+
+		s.swaggerConfig = cfg
+	}
+
+	return s.swaggerConfig
+}
+
+func (s *serviceProvider) PostgresClient(ctx context.Context) db.Client {
 	if s.pgClient == nil {
 		client, err := pg.New(ctx, s.PGConfig().DSN())
 		if err != nil {
@@ -105,7 +133,7 @@ func (s *serviceProvider) ChatRepository(ctx context.Context) repository.ChatRep
 	return s.chatRepository
 }
 
-func (s *serviceProvider) TxManager(ctx context.Context) postgres.TxManager {
+func (s *serviceProvider) TxManager(ctx context.Context) db.TxManager {
 	if s.txManager == nil {
 		s.txManager = transaction.NewTransactionManager(s.PostgresClient(ctx).DB())
 	}

@@ -13,5 +13,6 @@ func (s *serv) SendMessage(ctx context.Context, createMessage *model.MessageCrea
 	if err != nil {
 		return "", err
 	}
+
 	return id, nil
 }
