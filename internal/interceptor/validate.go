@@ -32,6 +32,7 @@ func ValidateInterceptor(ctx context.Context, req interface{}, _ *grpc.UnaryServ
 	return handler(ctx, req)
 }
 
+// AuthInterceptor interceptor for token validate
 func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	md := metadata.New(map[string]string{"Authorization": "Bearer " + *accessToken})
 	ctx = metadata.NewOutgoingContext(ctx, md)
