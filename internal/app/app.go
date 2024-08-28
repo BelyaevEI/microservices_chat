@@ -256,6 +256,7 @@ func (a *App) initGRPCServer(ctx context.Context) error {
 	a.grpcServer = grpc.NewServer(
 		grpc.Creds(creds),
 		grpc.UnaryInterceptor(interceptor.ValidateInterceptor),
+		grpc.UnaryInterceptor(interceptor.AuthInterceptor),
 	)
 
 	reflection.Register(a.grpcServer)
